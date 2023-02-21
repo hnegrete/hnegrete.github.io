@@ -1,0 +1,762 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<style>
+header {
+  background-color: #666;
+  padding: 1px;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+}
+
+.insignia {
+  float: left;
+  margin: 5px;
+  margin-right: 10px;
+}
+
+.contenedor {
+  margin-top: 20px;
+  height: 600px;
+}
+
+.columna {
+  float: left;
+  width: 50%;
+  height: 500px;
+}
+
+.comentario {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 25px;
+  padding: 20px;
+  text-align: justify;
+  height: 110px;
+  font-size: 18px;
+  box-shadow: 5px 10px 8px 10px #888888;
+}
+
+.filtro {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  width: 200px;
+  font-size: 18px;
+}
+
+tr {
+  text-align: center;
+  height: 40px;
+  word-wrap: break-word;
+}
+
+.trLogo:hover {background-color: #D6EEEE;}
+
+footer {
+  background-color: #666;
+  padding: 10px;
+  text-align: left;
+  color: white;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+</style>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+<script>
+//-------------------- Catálogos --------------------
+const cobertura = ["Estados Unidos", "A nivel mundial"]
+
+const empresas = ["Delicious", "digg", "docstoc", "facebook", "flickr", "friendfeed", "LinkedIn", "mixx", "myspace", "ning", "qik", "scribd", "twitter", "ustream", "yelp"]
+
+const indicadores = {"Visitantes únicos": "Visitantes (millones)", "Alcance": "Porcentaje", "Visitas a la página": "Visitas (millones)", "Total de visitas": "Visitas (millones)", "Promedio de visitas por visitante": "Vistias por visitante", "Promedio de tiempo en el sitio": "Tiempo (minutos)"}
+
+const lugarEmpr = {"Delicious": 10, "digg": 6, "docstoc": 13, "facebook": 1, "flickr": 4, "friendfeed": 12, "LinkedIn": 5, "mixx": 14, "myspace": 2, "ning": 7, "qik": 15, "scribd": 8, "twitter": 3, "ustream": 11, "yelp": 9}
+</script>
+<script>
+//-------------------- Datos para las gráficas --------------------
+const datosPag1 = {
+  "Estados Unidos": {
+    "Empresa" : [
+      {"empresa": "delicious", "Visitantes únicos": 1.2, "Alcance": 0.5, "Visitas a la página": 31, "Total de visitas": 7.2, "Promedio de visitas por visitante": 6, "Promedio de tiempo en el sitio": 410},
+      {"empresa": "digg", "Visitantes únicos": 9, "Alcance": 3.9, "Visitas a la página": 230, "Total de visitas": 53, "Promedio de visitas por visitante": 5.9, "Promedio de tiempo en el sitio": 450},
+      {"empresa": "docstoc", "Visitantes únicos": 1.8, "Alcance": 0.8, "Visitas a la página": 12, "Total de visitas": 3.9, "Promedio de visitas por visitante": 2.1, "Promedio de tiempo en el sitio": 240},
+      {"empresa": "facebook", "Visitantes únicos": 110, "Alcance": 45.6, "Visitas a la página": 52000, "Total de visitas": 3100, "Promedio de visitas por visitante": 28, "Promedio de tiempo en el sitio": 1200},
+      {"empresa": "flickr", "Visitantes únicos": 19, "Alcance": 8.3, "Visitas a la página": 1000, "Total de visitas": 94, "Promedio de visitas por visitante": 4.9, "Promedio de tiempo en el sitio": 480},
+      {"empresa": "friendfeed", "Visitantes únicos": 0.68, "Alcance": 0.3, "Visitas a la página": 16, "Total de visitas": 3.4, "Promedio de visitas por visitante": 5.1, "Promedio de tiempo en el sitio": 480},
+      {"empresa": "LinkedIn", "Visitantes únicos": 14, "Alcance": 6.1, "Visitas a la página": 800, "Total de visitas": 85, "Promedio de visitas por visitante": 6, "Promedio de tiempo en el sitio": 580},
+      {"empresa": "mixx", "Visitantes únicos": 0.57, "Alcance": 0.2, "Visitas a la página": 7.4, "Total de visitas": 1.6, "Promedio de visitas por visitante": 2.7, "Promedio de tiempo en el sitio": 340},
+      {"empresa": "myspace", "Visitantes únicos": 61, "Alcance": 26.1, "Visitas a la página": 32000, "Total de visitas": 1200, "Promedio de visitas por visitante": 19, "Promedio de tiempo en el sitio": 1400},
+      {"empresa": "ning", "Visitantes únicos": 5.6, "Alcance": 2.4, "Visitas a la página": 250, "Total de visitas": 28, "Promedio de visitas por visitante": 5, "Promedio de tiempo en el sitio": 700},
+      {"empresa": "qik", "Visitantes únicos": 0.12, "Alcance": 0.1, "Visitas a la página": 1.8, "Total de visitas": 0.34, "Promedio de visitas por visitante": 2.8, "Promedio de tiempo en el sitio": 420},
+      {"empresa": "scribd", "Visitantes únicos": 4.2, "Alcance": 1.8, "Visitas a la página": 32, "Total de visitas": 10, "Promedio de visitas por visitante": 2.5, "Promedio de tiempo en el sitio": 290},
+      {"empresa": "twitter", "Visitantes únicos": 24, "Alcance": 10.1, "Visitas a la página": 2100, "Total de visitas": 270, "Promedio de visitas por visitante": 11, "Promedio de tiempo en el sitio": 730},
+      {"empresa": "ustream", "Visitantes únicos": 1.5, "Alcance": 0.6, "Visitas a la página": 34, "Total de visitas": 6.1, "Promedio de visitas por visitante": 4.1, "Promedio de tiempo en el sitio": 680},
+      {"empresa": "Yelp", "Visitantes únicos": 9.7, "Alcance": 4.2, "Visitas a la página": 160, "Total de visitas": 33, "Promedio de visitas por visitante": 3.4, "Promedio de tiempo en el sitio": 360}
+    ],
+    "Indicador": {
+      "Visitantes únicos": {"facebook": 110, "myspace": 61, "twitter": 24, "flickr": 19, "LinkedIn": 14, "Yelp": 9.7, "digg": 9, "ning": 5.6, "scribd": 4.2, "docstoc": 1.8, "ustream": 1.5, "delicious": 1.2, "friendfeed": 0.68, "mixx": 0.57, "qik": 0.12},
+      "Alcance": {"facebook": 45.6, "myspace": 26.1, "twitter": 10.1, "flickr": 8.3, "LinkedIn": 6.1, "Yelp": 4.2, "digg": 3.9, "ning": 2.4, "scribd": 1.8, "docstoc": 0.8, "ustream": 0.6, "delicious": 0.5, "friendfeed": 0.3, "mixx": 0.2, "qik": 0.1},
+      "Visitas a la página": {"facebook": 52000, "myspace": 32000, "twitter": 2100, "flickr": 1000, "LinkedIn": 800, "ning": 250, "digg": 230, "Yelp": 160, "ustream": 34, "scribd": 32, "delicious": 31, "friendfeed": 16, "docstoc": 12, "mixx": 7.4, "qik": 1.8},
+      "Total de visitas": {"facebook": 3100, "myspace": 1200, "twitter": 270, "flickr": 94, "LinkedIn": 85, "digg": 53, "Yelp": 33, "ning": 28, "scribd": 10, "delicious": 7.2, "ustream": 6.1, "docstoc": 3.9, "friendfeed": 3.4, "mixx": 1.6, "qik": 0.34},
+      "Promedio de visitas por visitante": {"facebook": 28, "myspace": 19, "twitter": 11, "delicious": 6, "LinkedIn": 6, "digg": 5.9, "friendfeed": 5.1, "ning": 5, "flickr": 4.9, "ustream": 4.1, "Yelp": 3.4, "qik": 2.8, "mixx": 2.7, "scribd": 2.5, "docstoc": 2.1},
+      "Promedio de tiempo en el sitio": {"myspace": 23.3, "facebook": 20, "twitter": 12.2, "ning": 11.7, "ustream": 11.3, "LinkedIn": 9.7, "flickr": 8, "friendfeed": 8, "digg": 7.5, "qik": 7, "delicious": 6.8, "Yelp": 6, "mixx": 5.7, "scribd": 4.8, "docstoc": 4}
+    }
+  },
+  "A nivel mundial": {
+    "Empresa" : [
+      {"empresa": "delicious", "Visitantes únicos": 4.6, "Alcance": 0.4, "Visitas a la página": 97, "Total de visitas": 21, "Promedio de visitas por visitante": 4.6, "Promedio de tiempo en el sitio": 410},
+      {"empresa": "digg", "Visitantes únicos": 23, "Alcance": 1.8, "Visitas a la página": 410, "Total de visitas": 98, "Promedio de visitas por visitante": 4.2, "Promedio de tiempo en el sitio": 410},
+      {"empresa": "docstoc", "Visitantes únicos": 4.6, "Alcance": 0.4, "Visitas a la página": 28, "Total de visitas": 9, "Promedio de visitas por visitante": 2, "Promedio de tiempo en el sitio": 250},
+      {"empresa": "facebook", "Visitantes únicos": 370, "Alcance": 28.8, "Visitas a la página": 160000, "Total de visitas": 8700, "Promedio de visitas por visitante": 23, "Promedio de tiempo en el sitio": 1400},
+      {"empresa": "flickr", "Visitantes únicos": 73, "Alcance": 5.7, "Visitas a la página": 3000, "Total de visitas": 280, "Promedio de visitas por visitante": 3.8, "Promedio de tiempo en el sitio": 550},
+      {"empresa": "friendfeed", "Visitantes únicos": 2.6, "Alcance": 0.2, "Visitas a la página": 59, "Total de visitas": 12, "Promedio de visitas por visitante": 4.6, "Promedio de tiempo en el sitio": 590},
+      {"empresa": "LinkedIn", "Visitantes únicos": 31, "Alcance": 2.4, "Visitas a la página": 1400, "Total de visitas": 160, "Promedio de visitas por visitante": 5.1, "Promedio de tiempo en el sitio": 540},
+      {"empresa": "mixx", "Visitantes únicos": 2.3, "Alcance": 0.2, "Visitas a la página": 21, "Total de visitas": 4.6, "Promedio de visitas por visitante": 2, "Promedio de tiempo en el sitio": 310},
+      {"empresa": "myspace", "Visitantes únicos": 120, "Alcance": 9.1, "Visitas a la página": 39000, "Total de visitas": 1500, "Promedio de visitas por visitante": 13, "Promedio de tiempo en el sitio": 1300},
+      {"empresa": "ning", "Visitantes únicos": 18, "Alcance": 1.4, "Visitas a la página": 650, "Total de visitas": 74, "Promedio de visitas por visitante": 4.1, "Promedio de tiempo en el sitio": 700},
+      {"empresa": "qik", "Visitantes únicos": 0.38, "Alcance": 0, "Visitas a la página": 5.1, "Total de visitas": 0.92, "Promedio de visitas por visitante": 2.4, "Promedio de tiempo en el sitio": 480},
+      {"empresa": "scribd", "Visitantes únicos": 23, "Alcance": 1.8, "Visitas a la página": 160, "Total de visitas": 51, "Promedio de visitas por visitante": 2.2, "Promedio de tiempo en el sitio": 330},
+      {"empresa": "twitter", "Visitantes únicos": 66, "Alcance": 5.1, "Visitas a la página": 4000, "Total de visitas": 550, "Promedio de visitas por visitante": 8.3, "Promedio de tiempo en el sitio": 700},
+      {"empresa": "ustream", "Visitantes únicos": 4.6, "Alcance": 0.4, "Visitas a la página": 73, "Total de visitas": 14, "Promedio de visitas por visitante": 3.1, "Promedio de tiempo en el sitio": 590},
+      {"empresa": "Yelp", "Visitantes únicos": 11, "Alcance": 0.9, "Visitas a la página": 160, "Total de visitas": 35, "Promedio de visitas por visitante": 3.1, "Promedio de tiempo en el sitio": 330},
+    ],
+    "Indicador": {
+      "Visitantes únicos": {"facebook": 370, "myspace": 120, "flickr": 73, "twitter": 66, "LinkedIn": 31, "digg": 23, "scribd": 23, "ning": 18, "Yelp": 11, "delicious": 4.6, "docstoc": 4.6, "ustream": 4.6, "friendfeed": 2.6, "mixx": 2.3, "qik": 0.38},
+      "Alcance": {"facebook": 28.8, "myspace": 9.1, "flickr": 5.7, "twitter": 5.1, "LinkedIn": 2.4, "digg": 1.8, "scribd": 1.8, "ning": 1.4, "Yelp": 0.9, "delicious": 0.4, "docstoc": 0.4, "ustream": 0.4, "friendfeed": 0.2, "mixx": 0.2, "qik": 0},
+      "Visitas a la página": {"facebook": 160000, "myspace": 39000, "twitter": 4000, "flickr": 3000, "LinkedIn": 1400, "ning": 650, "digg": 410, "scribd": 160, "Yelp": 160, "delicious": 97, "ustream": 73, "friendfeed": 59, "docstoc": 28, "mixx": 21, "qik": 5.1},
+      "Total de visitas": {"facebook": 8700, "myspace": 1500, "twitter": 550, "flickr": 280, "LinkedIn": 160, "digg": 98, "ning": 74, "scribd": 51, "Yelp": 35, "delicious": 21, "ustream": 14, "friendfeed": 12, "docstoc": 9, "mixx": 4.6, "qik": 0.92},
+      "Promedio de visitas por visitante": {"facebook": 23, "myspace": 13, "twitter": 8.3, "LinkedIn": 5.1, "delicious": 4.6, "friendfeed": 4.6, "digg": 4.2, "ning": 4.1, "flickr": 3.8, "ustream": 3.1, "Yelp": 3.1, "qik": 2.4, "scribd": 2.2, "docstoc": 2, "mixx": 2},
+      "Promedio de tiempo en el sitio": {"facebook": 23.3, "myspace": 21.7, "ning": 11.7, "twitter": 11.7, "friendfeed": 9.8, "ustream": 9.8, "flickr": 9.2, "LinkedIn": 9, "qik": 8, "delicious": 6.8, "digg": 6.8, "scribd": 5.5, "Yelp": 5.5, "mixx": 5.2, "docstoc": 4.2}
+    }
+  }
+}
+
+const datosPag2 = {
+  'Sexo': {
+    "Hombre": [48, 64, 41, 43, 45, 45, 50, 52, 36, 41, 52, 52, 43, 34, 43],
+    "Mujer": [52, 36, 59, 57, 55, 55, 50, 48, 64, 59, 48, 48, 57, 66, 57]
+  },
+  'Edad': {
+    "0-17": [3, 11, 8, 18, 13, 2, 3, 11, 34, 15, 6, 9, 11, 12, 6],
+    "18-24": [7, 9, 5, 7, 9, 9, 3, 10, 10, 10, 13, 6, 8, 15, 5],
+    "25-34": [20, 18, 14, 14, 19, 24, 16, 21, 12, 17, 23, 17, 16, 22, 17],
+    "35-44": [36, 29, 25, 20, 25, 43, 31, 26, 16, 25, 34, 25, 29, 26, 27],
+    "45-54": [16, 18, 30, 24, 21, 14, 28, 19, 19, 20, 16, 25, 20, 15, 27],
+    "55-64": [14, 10, 16, 12, 11, 7, 16, 10, 7, 10, 6, 14, 11, 8, 15],
+    "65+": [3, 4, 3, 4, 3, 2, 4, 2, 2, 3, 2, 3, 3, 2, 3]
+  },
+  'Ingreso': {
+    "$0-$24,999": [22, 14, 10, 7, 12, 30, 11, 17, 7, 13, 21, 13, 13, 18, 9],
+    "$25,000-$49,999": [29, 28, 23, 22, 27, 30, 18, 32, 39, 34, 31, 25, 30, 35, 18],
+    "$50,000-$74,999": [16, 25, 30, 36, 29, 15, 23, 24, 35, 28, 23, 27, 27, 24, 29],
+    "$75,000-$99,999": [20, 20, 20, 18, 18, 15, 23, 16, 11, 14, 16, 20, 16, 13, 19],
+    "100,000-$149,999": [8, 10, 12, 12, 10, 6, 16, 8, 6, 8, 7, 10, 10, 7, 16],
+    "$150,000 o más": [5, 4, 6, 5, 4, 3, 10, 3, 2, 3, 3, 5, 4, 2, 8]
+  },
+  'Niños en el hogar': {
+    "Sí": [11, 22, 19, 36, 28, 10, 10, 24, 57, 36, 22, 21, 28, 34, 15],
+    "No": [89, 78, 81, 64, 72, 90, 90, 76, 43, 64, 78, 79, 72, 66, 85]
+  },
+  'Escolaridad': {
+    "Menor a secundaria": [4, 15, 9, 22, 16, 4, 4, 14, 32, 17, 9, 12, 12, 16, 8],
+    "Secundaria": [7, 10, 11, 14, 11, 4, 9, 10, 12, 10, 10, 11, 9, 8, 10],
+    "Media superior": [43, 39, 44, 36, 41, 52, 34, 48, 42, 48, 46, 40, 47, 50, 35],
+    "Superior": [32, 27, 24, 20, 23, 32, 37, 20, 10, 18, 28, 25, 24, 19, 32],
+    "Posgrado": [14, 9, 13, 8, 9, 8, 16, 7, 4, 7, 7, 13, 8, 6, 14]
+  }
+}
+</script>
+<script>
+//-------------------- Actualizar gráficas --------------------
+function actualizarCobertura() {
+  var cobSele = document.getElementById("filtroCobertura").value;
+  var indSele = document.getElementById("filtroIndicador").value;
+  // Tabla de logos
+  document.getElementById("tablaUS").style.display = "none";
+  document.getElementById("tablaWW").style.display = "none";
+  if (cobSele == "Estados Unidos") {
+    document.getElementById("tablaUS").style.display = "block";
+    // Cuadro de texto
+    document.getElementById("txtIndic").innerHTML = "En Estados Unidos, la red social <b><i>Facebook</i></b> se posiciona en el primer lugar, seguido de <b><i>myspace</i></b>, en casi todos los indicadores, sólo se invierten posiciones en el tiempo promedio en el sitio.<br>Caso contrario ocurre con <b><i>qik</i></b>, que en todos los indicadores se encuentra en último lugar (15), a excepción del promedio de visitas por visitante (lugar 12) y al tiempo promedio en el sitio (lugar 10).";
+  } else {
+    document.getElementById("tablaWW").style.display = "block";
+    // Cuadro de texto
+    document.getElementById("txtIndic").innerHTML = "A nivel mundial, <b><i>Facebook</i></b> y <b><i>myspace</i></b> se posicionan en los lugares 1 y 2, respectivamente, en todos los indicadores. Es interesante que <b><i>flickr</i></b> le quita el tercer lugar a <b><i>twitter</i></b> en cuanto a visitantes únicos y el alcance.<br>Por otro lado, <b><i>LinkedIn</i></b> se posiciona en el lugar 8 en cuanto al promedio de tiempo en el sitio, bajando dos posiciones respecto a su situación en Estados Unidos (lugar 6).";
+  }
+  // Gráfica 6
+  chart6.setTitle({text: indSele});
+  chart6.series[0].setName(indSele);
+  chart6.xAxis[0].categories = Object.keys(datosPag1[cobSele]["Indicador"][indSele]);
+  chart6.series[0].setData(Object.values(datosPag1[cobSele]["Indicador"][indSele]));
+  chart6.yAxis[0].setTitle({ text: indicadores[indSele] });
+}
+
+function actualizarEmpresa() {
+  var empSele = document.getElementById("filtroEmpresa").value;
+  // Texto
+  document.getElementById("imgInsig").src = "insignias/Lugar"+String(lugarEmpr[empSele]).padStart(2, '0')+".png";
+  document.getElementById("imgLogo").src = "img/"+empSele+".png";
+  document.getElementById("txtInsig").innerHTML = "La red social <b><i>"+empSele+"</i></b> se posiciona en el lugar <b>"+lugarEmpr[empSele]+"</b> respecto a la cantidad total de visitas al sitio a nivel mundial.";
+  // Gráfica 1
+  //chart1.setTitle(null, {text: empSele});
+  chart1.series[0].setName(empSele);
+  chart1.series[0].setData([datosPag2["Sexo"]["Hombre"][empresas.indexOf(empSele)],datosPag2["Sexo"]["Mujer"][empresas.indexOf(empSele)]]);
+  // Gráfica 2
+  chart2.series[0].setName(empSele);
+  chart2.series[0].setData([datosPag2["Edad"]["0-17"][empresas.indexOf(empSele)],datosPag2["Edad"]["18-24"][empresas.indexOf(empSele)],datosPag2["Edad"]["25-34"][empresas.indexOf(empSele)],datosPag2["Edad"]["35-44"][empresas.indexOf(empSele)],datosPag2["Edad"]["45-54"][empresas.indexOf(empSele)],datosPag2["Edad"]["55-64"][empresas.indexOf(empSele)],datosPag2["Edad"]["65+"][empresas.indexOf(empSele)]]);
+  // Gráfica 3
+  chart3.series[0].setName(empSele);
+  chart3.series[0].setData([datosPag2["Escolaridad"]["Menor a secundaria"][empresas.indexOf(empSele)],datosPag2["Escolaridad"]["Secundaria"][empresas.indexOf(empSele)],datosPag2["Escolaridad"]["Media superior"][empresas.indexOf(empSele)],datosPag2["Escolaridad"]["Superior"][empresas.indexOf(empSele)],datosPag2["Escolaridad"]["Posgrado"][empresas.indexOf(empSele)]]);
+  // Gráfica 4
+  chart4.series[0].setName(empSele);
+  chart4.series[0].setData([datosPag2["Ingreso"]["$0-$24,999"][empresas.indexOf(empSele)],datosPag2["Ingreso"]["$25,000-$49,999"][empresas.indexOf(empSele)],datosPag2["Ingreso"]["$50,000-$74,999"][empresas.indexOf(empSele)],datosPag2["Ingreso"]["$75,000-$99,999"][empresas.indexOf(empSele)],datosPag2["Ingreso"]["100,000-$149,999"][empresas.indexOf(empSele)],datosPag2["Ingreso"]["$150,000 o más"][empresas.indexOf(empSele)]]);
+  // Gráfica 5
+  chart5.series[0].setName(empSele);
+  chart5.series[0].setData([datosPag2["Niños en el hogar"]["Sí"][empresas.indexOf(empSele)],datosPag2["Niños en el hogar"]["No"][empresas.indexOf(empSele)]]);
+}
+
+function compararEmpresa() {
+  var compSele = document.getElementById("filtroCompara").value;
+  if (compSele != "-Ninguna-") {
+    if (chart2.series.length > 1) {
+      chart2.series[1].remove();
+      chart3.series[1].remove();
+      chart4.series[1].remove();
+    }
+    // Gráfica 2
+    chart2.addSeries({
+      name: compSele,
+      color: '#2A3132',
+      data: [datosPag2["Edad"]["0-17"][empresas.indexOf(compSele)],datosPag2["Edad"]["18-24"][empresas.indexOf(compSele)],datosPag2["Edad"]["25-34"][empresas.indexOf(compSele)],datosPag2["Edad"]["35-44"][empresas.indexOf(compSele)],datosPag2["Edad"]["45-54"][empresas.indexOf(compSele)],datosPag2["Edad"]["55-64"][empresas.indexOf(compSele)],datosPag2["Edad"]["65+"][empresas.indexOf(compSele)]]
+    });
+    // Gráfica 3
+    chart3.addSeries({
+      name: compSele,
+      color: '#2A3132',
+      data: [datosPag2["Escolaridad"]["Menor a secundaria"][empresas.indexOf(compSele)],datosPag2["Escolaridad"]["Secundaria"][empresas.indexOf(compSele)],datosPag2["Escolaridad"]["Media superior"][empresas.indexOf(compSele)],datosPag2["Escolaridad"]["Superior"][empresas.indexOf(compSele)],datosPag2["Escolaridad"]["Posgrado"][empresas.indexOf(compSele)]]
+    });
+    // Gráfica 4
+    chart4.addSeries({
+      name: compSele,
+      color: '#2A3132',
+      data: [datosPag2["Ingreso"]["$0-$24,999"][empresas.indexOf(compSele)],datosPag2["Ingreso"]["$25,000-$49,999"][empresas.indexOf(compSele)],datosPag2["Ingreso"]["$50,000-$74,999"][empresas.indexOf(compSele)],datosPag2["Ingreso"]["$75,000-$99,999"][empresas.indexOf(compSele)],datosPag2["Ingreso"]["100,000-$149,999"][empresas.indexOf(compSele)],datosPag2["Ingreso"]["$150,000 o más"][empresas.indexOf(compSele)]]
+    });
+  } else {
+    if (chart2.series.length > 1) {
+      chart2.series[1].remove();
+      chart3.series[1].remove();
+      chart4.series[1].remove();
+    }
+  }
+}
+
+function paginas(x) {
+  document.getElementById("pag1").style.display = "none";
+  document.getElementById("pag2").style.display = "none";
+  document.getElementById("pag"+x).style.display = "block";
+}
+</script>
+</head>
+<body>
+
+<header>
+  <table style="width: 100%">
+    <tr>
+      <td><button type="button" onclick="paginas(1)">Redes sociales</button></td>
+      <td><h2>Laboratorio: Trabajo colaborativo de visualización de datos</h2></td>
+      <td><button type="button" onclick="paginas(2)">Sociodemográficas</button></td>
+    </tr>
+  </table>
+</header>
+
+<div id="pag1">
+<div class="row">
+
+<div class="col-7">
+  <div class="row">
+    <div class="col-6">
+    <label for="filtroCobertura">Seleccionar la cobertura: </label>
+    <select class="filtro" name="coberturaSel" id="filtroCobertura" onchange="actualizarCobertura()">
+      <option value="Estados Unidos">Estados Unidos</option>
+      <option value="A nivel mundial">A nivel mundial</option>
+    </select>
+    </div>
+    <div class="col-6">
+    <label for="filtroIndicador">Seleccionar el indicador: </label>
+    <select class="filtro" name="indicadorSel" id="filtroIndicador" onchange="actualizarCobertura()">
+      <option value="Visitantes únicos">Visitantes únicos</option>
+      <option value="Alcance">Alcance</option>
+      <option value="Visitas a la página">Visitas a la página</option>
+      <option value="Total de visitas">Total de visitas</option>
+      <option value="Promedio de visitas por visitante">Promedio de visitas por visitante</option>
+      <option value="Promedio de tiempo en el sitio">Promedio de tiempo en el sitio</option>
+    </select>
+    </div>
+  </div>
+  <div style="margin-top: 25px;" id="Graf6"></div>
+
+  <div class="comentario" style="height: 195px;">
+    <p id="txtIndic">En Estados Unidos, la red social <b><i>Facebook</i></b> se posiciona en el primer lugar, seguido de <b><i>myspace</i></b>, en casi todos los indicadores, sólo se invierten posiciones en el tiempo promedio en el sitio.<br>Caso contrario ocurre con <b><i>qik</i></b>, que en todos los indicadores se encuentra en último lugar (15), a excepción del promedio de visitas por visitante (lugar 12) y al tiempo promedio en el sitio (lugar 10).</p>
+  </div>
+</div>
+
+<div class="col-5">
+
+<table id="tablaUS" style="margin-top: 5px; table-layout: fixed; width: 570px">
+<thead style="color: white; background: #336B87;">
+<tr><th>Lugar</th><th>Visitantes únicos</th><th>Alcance</th><th>Vistas a la página</th><th>Total de visitas</th><th>Promedio de visitas</th><th>Promedio de tiempo</th></tr>
+</thead>
+<tbody>
+<tr class="trLogo"><td>1</td><td><img id="logoV1L1" src="img/facebook.png" width="60" title="Visitantes únicos: 110"/></td><td><img id="logoV2L1" src="img/facebook.png" width="60" /></td><td><img id="logoV3L1" src="img/facebook.png" width="60" /></td><td><img id="logoV4L1" src="img/facebook.png" width="60" /></td><td><img id="logoV5L1" src="img/facebook.png" width="60" /></td><td><img id="logoV6L1" src="img/myspace.png" width="60" /></td></tr>
+<tr class="trLogo"><td>2</td><td><img id="logoV1L2" src="img/myspace.png" width="60" /></td><td><img id="logoV2L2" src="img/myspace.png" width="60" /></td><td><img id="logoV3L2" src="img/myspace.png" width="60" /></td><td><img id="logoV4L2" src="img/myspace.png" width="60" /></td><td><img id="logoV5L2" src="img/myspace.png" width="60" /></td><td><img id="logoV6L2" src="img/facebook.png" width="60" /></td></tr>
+<tr class="trLogo"><td>3</td><td><img id="logoV1L3" src="img/twitter.png" width="60" /></td><td><img id="logoV2L3" src="img/twitter.png" width="60" /></td><td><img id="logoV3L3" src="img/twitter.png" width="60" /></td><td><img id="logoV4L3" src="img/twitter.png" width="60" /></td><td><img id="logoV5L3" src="img/twitter.png" width="60" /></td><td><img id="logoV6L3" src="img/twitter.png" width="60" /></td></tr>
+<tr class="trLogo"><td>4</td><td><img id="logoV1L4" src="img/flickr.png" width="60" /></td><td><img id="logoV2L4" src="img/flickr.png" width="60" /></td><td><img id="logoV3L4" src="img/flickr.png" width="60" /></td><td><img id="logoV4L4" src="img/flickr.png" width="60" /></td><td><img id="logoV5L4" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV6L4" src="img/ning.png" width="60" /></td></tr>
+<tr class="trLogo"><td>5</td><td><img id="logoV1L5" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV2L5" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV3L5" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV4L5" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV5L5" src="img/Delicious.png" width="60" /></td><td><img id="logoV6L5" src="img/ustream.png" width="60" /></td></tr>
+<tr class="trLogo"><td>6</td><td><img id="logoV1L6" src="img/yelp.png" width="60" /></td><td><img id="logoV2L6" src="img/yelp.png" width="60" /></td><td><img id="logoV3L6" src="img/ning.png" width="60" /></td><td><img id="logoV4L6" src="img/digg.png" width="60" /></td><td><img id="logoV5L6" src="img/digg.png" width="60" /></td><td><img id="logoV6L6" src="img/LinkedIn.png" width="60" /></td></tr>
+<tr class="trLogo"><td>7</td><td><img id="logoV1L7" src="img/digg.png" width="60" /></td><td><img id="logoV2L7" src="img/digg.png" width="60" /></td><td><img id="logoV3L7" src="img/digg.png" width="60" /></td><td><img id="logoV4L7" src="img/yelp.png" width="60" /></td><td><img id="logoV5L7" src="img/friendfeed.png" width="60" /></td><td><img id="logoV6L7" src="img/friendfeed.png" width="60" /></td></tr>
+<tr class="trLogo"><td>8</td><td><img id="logoV1L8" src="img/ning.png" width="60" /></td><td><img id="logoV2L8" src="img/ning.png" width="60" /></td><td><img id="logoV3L8" src="img/yelp.png" width="60" /></td><td><img id="logoV4L8" src="img/ning.png" width="60" /></td><td><img id="logoV5L8" src="img/ning.png" width="60" /></td><td><img id="logoV6L8" src="img/flickr.png" width="60" /></td></tr>
+<tr class="trLogo"><td>9</td><td><img id="logoV1L9" src="img/scribd.png" width="60" /></td><td><img id="logoV2L9" src="img/scribd.png" width="60" /></td><td><img id="logoV3L9" src="img/ustream.png" width="60" /></td><td><img id="logoV4L9" src="img/scribd.png" width="60" /></td><td><img id="logoV5L9" src="img/flickr.png" width="60" /></td><td><img id="logoV6L9" src="img/digg.png" width="60" /></td></tr>
+<tr class="trLogo"><td>10</td><td><img id="logoV1L10" src="img/docstoc.png" width="60" /></td><td><img id="logoV2L10" src="img/docstoc.png" width="60" /></td><td><img id="logoV3L10" src="img/scribd.png" width="60" /></td><td><img id="logoV4L10" src="img/Delicious.png" width="60" /></td><td><img id="logoV5L10" src="img/ustream.png" width="60" /></td><td><img id="logoV6L10" src="img/qik.png" width="60" /></td></tr>
+<tr class="trLogo"><td>11</td><td><img id="logoV1L11" src="img/ustream.png" width="60" /></td><td><img id="logoV2L11" src="img/ustream.png" width="60" /></td><td><img id="logoV3L11" src="img/Delicious.png" width="60" /></td><td><img id="logoV4L11" src="img/ustream.png" width="60" /></td><td><img id="logoV5L11" src="img/yelp.png" width="60" /></td><td><img id="logoV6L11" src="img/Delicious.png" width="60" /></td></tr>
+<tr class="trLogo"><td>12</td><td><img id="logoV1L12" src="img/Delicious.png" width="60" /></td><td><img id="logoV2L12" src="img/Delicious.png" width="60" /></td><td><img id="logoV3L12" src="img/friendfeed.png" width="60" /></td><td><img id="logoV4L12" src="img/docstoc.png" width="60" /></td><td><img id="logoV5L12" src="img/qik.png" width="60" /></td><td><img id="logoV6L12" src="img/yelp.png" width="60" /></td></tr>
+<tr class="trLogo"><td>13</td><td><img id="logoV1L13" src="img/friendfeed.png" width="60" /></td><td><img id="logoV2L13" src="img/friendfeed.png" width="60" /></td><td><img id="logoV3L13" src="img/docstoc.png" width="60" /></td><td><img id="logoV4L13" src="img/friendfeed.png" width="60" /></td><td><img id="logoV5L13" src="img/mixx.png" width="60" /></td><td><img id="logoV6L13" src="img/mixx.png" width="60" /></td></tr>
+<tr class="trLogo"><td>14</td><td><img id="logoV1L14" src="img/mixx.png" width="60" /></td><td><img id="logoV2L14" src="img/mixx.png" width="60" /></td><td><img id="logoV3L14" src="img/mixx.png" width="60" /></td><td><img id="logoV4L14" src="img/mixx.png" width="60" /></td><td><img id="logoV5L14" src="img/scribd.png" width="60" /></td><td><img id="logoV6L14" src="img/scribd.png" width="60" /></td></tr>
+<tr class="trLogo"><td>15</td><td><img id="logoV1L15" src="img/qik.png" width="60" /></td><td><img id="logoV2L15" src="img/qik.png" width="60" /></td><td><img id="logoV3L15" src="img/qik.png" width="60" /></td><td><img id="logoV4L15" src="img/qik.png" width="60" /></td><td><img id="logoV5L15" src="img/docstoc.png" width="60" /></td><td><img id="logoV6L15" src="img/docstoc.png" width="60" /></td></tr>
+</tbody>
+</table>
+
+<table id="tablaWW" style="margin-top: 5px; table-layout: fixed; width: 570px; display: none">
+<thead style="color: white; background: #336B87;">
+<tr><th>Lugar</th><th>Visitantes únicos</th><th>Alcance</th><th>Vistas a la página</th><th>Total de visitas</th><th>Promedio de visitas</th><th>Promedio de tiempo</th></tr>
+</thead>
+<tbody>
+<tr class="trLogo"><td>1</td><td><img id="logoV1L1" src="img/facebook.png" width="60" /></td><td><img id="logoV2L1" src="img/facebook.png" width="60" /></td><td><img id="logoV3L1" src="img/facebook.png" width="60" /></td><td><img id="logoV4L1" src="img/facebook.png" width="60" /></td><td><img id="logoV5L1" src="img/facebook.png" width="60" /></td><td><img id="logoV6L1" src="img/facebook.png" width="60" /></td></tr>
+<tr class="trLogo"><td>2</td><td><img id="logoV1L2" src="img/myspace.png" width="60" /></td><td><img id="logoV2L2" src="img/myspace.png" width="60" /></td><td><img id="logoV3L2" src="img/myspace.png" width="60" /></td><td><img id="logoV4L2" src="img/myspace.png" width="60" /></td><td><img id="logoV5L2" src="img/myspace.png" width="60" /></td><td><img id="logoV6L2" src="img/myspace.png" width="60" /></td></tr>
+<tr class="trLogo"><td>3</td><td><img id="logoV1L3" src="img/flickr.png" width="60" /></td><td><img id="logoV2L3" src="img/flickr.png" width="60" /></td><td><img id="logoV3L3" src="img/twitter.png" width="60" /></td><td><img id="logoV4L3" src="img/twitter.png" width="60" /></td><td><img id="logoV5L3" src="img/twitter.png" width="60" /></td><td><img id="logoV6L3" src="img/twitter.png" width="60" /></td></tr>
+<tr class="trLogo"><td>4</td><td><img id="logoV1L4" src="img/twitter.png" width="60" /></td><td><img id="logoV2L4" src="img/twitter.png" width="60" /></td><td><img id="logoV3L4" src="img/flickr.png" width="60" /></td><td><img id="logoV4L4" src="img/flickr.png" width="60" /></td><td><img id="logoV5L4" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV6L4" src="img/ning.png" width="60" /></td></tr>
+<tr class="trLogo"><td>5</td><td><img id="logoV1L5" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV2L5" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV3L5" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV4L5" src="img/LinkedIn.png" width="60" /></td><td><img id="logoV5L5" src="img/Delicious.png" width="60" /></td><td><img id="logoV6L5" src="img/friendfeed.png" width="60" /></td></tr>
+<tr class="trLogo"><td>6</td><td><img id="logoV1L6" src="img/digg.png" width="60" /></td><td><img id="logoV2L6" src="img/digg.png" width="60" /></td><td><img id="logoV3L6" src="img/ning.png" width="60" /></td><td><img id="logoV4L6" src="img/digg.png" width="60" /></td><td><img id="logoV5L6" src="img/friendfeed.png" width="60" /></td><td><img id="logoV6L6" src="img/ustream.png" width="60" /></td></tr>
+<tr class="trLogo"><td>7</td><td><img id="logoV1L7" src="img/scribd.png" width="60" /></td><td><img id="logoV2L7" src="img/scribd.png" width="60" /></td><td><img id="logoV3L7" src="img/digg.png" width="60" /></td><td><img id="logoV4L7" src="img/ning.png" width="60" /></td><td><img id="logoV5L7" src="img/digg.png" width="60" /></td><td><img id="logoV6L7" src="img/flickr.png" width="60" /></td></tr>
+<tr class="trLogo"><td>8</td><td><img id="logoV1L8" src="img/ning.png" width="60" /></td><td><img id="logoV2L8" src="img/ning.png" width="60" /></td><td><img id="logoV3L8" src="img/scribd.png" width="60" /></td><td><img id="logoV4L8" src="img/scribd.png" width="60" /></td><td><img id="logoV5L8" src="img/ning.png" width="60" /></td><td><img id="logoV6L8" src="img/LinkedIn.png" width="60" /></td></tr>
+<tr class="trLogo"><td>9</td><td><img id="logoV1L9" src="img/yelp.png" width="60" /></td><td><img id="logoV2L9" src="img/yelp.png" width="60" /></td><td><img id="logoV3L9" src="img/yelp.png" width="60" /></td><td><img id="logoV4L9" src="img/yelp.png" width="60" /></td><td><img id="logoV5L9" src="img/flickr.png" width="60" /></td><td><img id="logoV6L9" src="img/qik.png" width="60" /></td></tr>
+<tr class="trLogo"><td>10</td><td><img id="logoV1L10" src="img/Delicious.png" width="60" /></td><td><img id="logoV2L10" src="img/Delicious.png" width="60" /></td><td><img id="logoV3L10" src="img/Delicious.png" width="60" /></td><td><img id="logoV4L10" src="img/Delicious.png" width="60" /></td><td><img id="logoV5L10" src="img/yelp.png" width="60" /></td><td><img id="logoV6L10" src="img/Delicious.png" width="60" /></td></tr>
+<tr class="trLogo"><td>11</td><td><img id="logoV1L11" src="img/docstoc.png" width="60" /></td><td><img id="logoV2L11" src="img/docstoc.png" width="60" /></td><td><img id="logoV3L11" src="img/ustream.png" width="60" /></td><td><img id="logoV4L11" src="img/ustream.png" width="60" /></td><td><img id="logoV5L11" src="img/ustream.png" width="60" /></td><td><img id="logoV6L11" src="img/digg.png" width="60" /></td></tr>
+<tr class="trLogo"><td>12</td><td><img id="logoV1L12" src="img/ustream.png" width="60" /></td><td><img id="logoV2L12" src="img/ustream.png" width="60" /></td><td><img id="logoV3L12" src="img/friendfeed.png" width="60" /></td><td><img id="logoV4L12" src="img/friendfeed.png" width="60" /></td><td><img id="logoV5L12" src="img/qik.png" width="60" /></td><td><img id="logoV6L12" src="img/yelp.png" width="60" /></td></tr>
+<tr class="trLogo"><td>13</td><td><img id="logoV1L13" src="img/friendfeed.png" width="60" /></td><td><img id="logoV2L13" src="img/friendfeed.png" width="60" /></td><td><img id="logoV3L13" src="img/docstoc.png" width="60" /></td><td><img id="logoV4L13" src="img/docstoc.png" width="60" /></td><td><img id="logoV5L13" src="img/scribd.png" width="60" /></td><td><img id="logoV6L13" src="img/scribd.png" width="60" /></td></tr>
+<tr class="trLogo"><td>14</td><td><img id="logoV1L14" src="img/mixx.png" width="60" /></td><td><img id="logoV2L14" src="img/mixx.png" width="60" /></td><td><img id="logoV3L14" src="img/mixx.png" width="60" /></td><td><img id="logoV4L14" src="img/mixx.png" width="60" /></td><td><img id="logoV5L14" src="img/docstoc.png" width="60" /></td><td><img id="logoV6L14" src="img/mixx.png" width="60" /></td></tr>
+<tr class="trLogo"><td>15</td><td><img id="logoV1L15" src="img/qik.png" width="60" /></td><td><img id="logoV2L15" src="img/qik.png" width="60" /></td><td><img id="logoV3L15" src="img/qik.png" width="60" /></td><td><img id="logoV4L15" src="img/qik.png" width="60" /></td><td><img id="logoV5L15" src="img/mixx.png" width="60" /></td><td><img id="logoV6L15" src="img/docstoc.png" width="60" /></td></tr>
+</tbody>
+</table>
+
+</div>
+
+</div>
+</div>
+
+<div id="pag2" style="display: none;">
+
+<div class="row">
+<div class="col-6" style="text-align: right;">
+  <label for="filtroEmpresa">Seleccionar la red social a visualizar: </label>
+  <select class="filtro" name="empresaSel" id="filtroEmpresa" onchange="actualizarEmpresa()">
+    <option value="Delicious">Delicious</option>
+    <option value="digg">digg</option>
+    <option value="docstoc">docstoc</option>
+    <option value="facebook">facebook</option>
+    <option value="flickr">flickr</option>
+    <option value="friendfeed">friendfeed</option>
+    <option value="LinkedIn">LinkedIn</option>
+    <option value="mixx">mixx</option>
+    <option value="myspace">myspace</option>
+    <option value="ning">ning</option>
+    <option value="qik">qik</option>
+    <option value="scribd">scribd</option>
+    <option value="twitter">twitter</option>
+    <option value="ustream">ustream</option>
+    <option value="yelp">yelp</option>
+  </select>
+</div>
+<div class="col-6">
+  <label for="filtroCompara">Seleccionar la red social a comparar: </label>
+  <select class="filtro" name="empresaComp" id="filtroCompara" onchange="compararEmpresa()">
+    <option value="-Ninguna-">-Ninguna-</option>
+    <option value="Delicious">Delicious</option>
+    <option value="digg">digg</option>
+    <option value="docstoc">docstoc</option>
+    <option value="facebook">facebook</option>
+    <option value="flickr">flickr</option>
+    <option value="friendfeed">friendfeed</option>
+    <option value="LinkedIn">LinkedIn</option>
+    <option value="mixx">mixx</option>
+    <option value="myspace">myspace</option>
+    <option value="ning">ning</option>
+    <option value="qik">qik</option>
+    <option value="scribd">scribd</option>
+    <option value="twitter">twitter</option>
+    <option value="ustream">ustream</option>
+    <option value="yelp">yelp</option>
+  </select>
+</div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-6">
+    <div class="comentario">
+      <div class="row">
+        <div class="col-10">
+          <img id="imgLogo" class="insignia" src="img/Delicious.png" height="40" />
+          <p id="txtInsig">La red social <b><i>Delicious</i></b> se posiciona en el lugar <b>10</b> respecto a la cantidad total de visitas al sitio a nivel mundial.</p>
+        </div>
+        <div class="col-2">
+          <img id="imgInsig" class="insignia" src="insignias/Lugar10.png" height="80" />
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 25px;" id="Graf2"></div>
+    <div style="margin-top: 25px;" id="Graf4"></div>
+  </div>
+  <div class="col-6">
+    <div id="Graf1" style="height: 300px;"></div>
+    <div id="Graf3"></div>
+    <div id="Graf5" style="height: 300px;"></div>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <table style="width: 100%">
+    <tr>
+      <td style="text-align: left;"><p><b>Fuente de datos:</b> http://www.briansolis.com/2009/10/revealing-the-people-defining-social-networks/</p></td>
+      <td style="text-align: right;"><p><b>Autor:</b> Héctor Negrete</p></td>
+    </tr>
+  </table>
+</footer>
+
+<script>
+//-------------------- Crear gráficas --------------------
+var chart1 = Highcharts.chart('Graf1', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    legend: {
+        enabled: false
+    },
+    title: {
+        text: 'Sexo'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f}%'
+            }
+        }
+    },
+    colors: ['#324851','#763626'],
+    series: [{
+        name: 'Delicious',
+        colorByPoint: true,
+        data: [{
+            name: 'Hombres',
+            y: 48,
+        }, {
+            name: 'Mujeres',
+            y: 52
+        }]
+    }]
+});
+
+var chart2 = Highcharts.chart('Graf2', {
+    title: {
+        text: 'Edad'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.y}%</b>'
+    },
+    yAxis: {
+        title: {
+            text: 'Porcentaje'
+        }
+    },
+    xAxis: {
+        categories: ['0-17','18-24','25-34','35-44','45-54','55-64','65+'],
+        title: {
+            text: "Grupo de edad"
+        }
+    },
+    legend: {
+        layout: 'horizontal',
+        align: 'center',
+        verticalAlign: 'bottom',
+        x: 0,
+        y: 0
+    },
+    series: [{
+        name: 'Delicious',
+        color: '#336B87',
+        lineWidth: 3,
+        data: [3,7,20,36,16,14,3]
+    }]
+});
+
+var chart3 = Highcharts.chart('Graf3', {
+    title: {
+        text: 'Escolaridad'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.y}%</b>'
+    },
+    yAxis: {
+        title: {
+            text: 'Porcentaje'
+        }
+    },
+    xAxis: {
+        categories: ["Menor a secundaria", "Secundaria", "Media superior", "Superior", "Posgrado"],
+        title: {
+            text: "Nivel de escolaridad"
+        }
+    },
+    legend: {
+        layout: 'horizontal',
+        align: 'center',
+        verticalAlign: 'bottom',
+        x: 0,
+        y: 0
+    },
+    series: [{
+        name: 'Delicious',
+        color: '#336B87',
+        lineWidth: 3,
+        data: [4,7,43,32,14]
+    }]
+});
+
+var chart4 = Highcharts.chart('Graf4', {
+    title: {
+        text: 'Ingreso en el hogar'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.y}%</b>'
+    },
+    yAxis: {
+        title: {
+            text: 'Porcentaje'
+        }
+    },
+    xAxis: {
+        categories: ["$0-$24,999", "$25,000-$49,999", "$50,000-$74,999", "$75,000-$99,999", "100,000-$149,999", "$150,000 o más"],
+        title: {
+            text: "Rango de ingreso"
+        }
+    },
+    legend: {
+        layout: 'horizontal',
+        align: 'center',
+        verticalAlign: 'bottom',
+        x: 0,
+        y: 0
+    },
+    series: [{
+        name: 'Delicious',
+        color: '#336B87',
+        lineWidth: 3,
+        data: [22,29,16,20,8,5]
+    }]
+});
+
+var chart5 = Highcharts.chart('Graf5', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    legend: {
+        enabled: false
+    },
+    title: {
+        text: 'Presencia de niños en el hogar'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.y:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.y:.1f}%'
+            }
+        }
+    },
+    colors: ['#336B87','#c1c1c1'],
+    series: [{
+        name: 'Delicious',
+        colorByPoint: true,
+        data: [{
+            name: 'Con niños en el hogar',
+            y: 11,
+            sliced: true,
+            selected: true
+        }, {
+            name: 'Sin niños en el hogar',
+            y: 89
+        }]
+    }]
+});
+
+var chart6 = Highcharts.chart('Graf6', {
+    chart: {
+        type: 'column',
+    },
+    legend: {
+        enabled: false
+    },
+    title: {
+        text: 'Visitantes únicos'
+    },
+    yAxis: {
+        title: {
+            text: 'Visitantes (millones)'
+        }
+    },
+    xAxis: {
+        categories: ["facebook", "myspace", "twitter", "flickr", "LinkedIn", "Yelp", "digg", "ning", "scribd", "docstoc", "ustream", "delicious", "friendfeed", "mixx", "qik"],
+        title: {
+            text: "Red social"
+        }
+    },
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                align: 'center',
+                color: '#000',
+                y: 0
+            },
+            groupPadding: 0
+        }
+    },
+    series: [{
+        name: 'Visitantes únicos',
+        color: '#336B87',
+        data: [110, 61, 24, 19, 14, 9.7, 9, 5.6, 4.2, 1.8, 1.5, 1.2, 0.68, 0.57, 0.12]
+    }]
+});
+
+
+/*
+var chart2 = Highcharts.chart('GrafX', {
+    chart: {
+        type: 'column',
+    },
+    legend: {
+        enabled: false
+    },
+    title: {
+        text: 'Evolución de migrantes españoles por año'
+    },
+    subtitle: {
+        text: 'Total'
+    },
+    yAxis: {
+        title: {
+            text: 'Emigrantes'
+        }
+    },
+    xAxis: {
+        categories: ["Delicious", "digg", "docstoc", "facebook", "flickr", "friendfeed", "LinkedIn", "mixx", "myspace", "ning", "qik", "scribd", "twitter", "ustream", "yelp"],
+        title: {
+            text: "Red social"
+        }
+    },
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                align: 'center',
+                color: '#FFFFFF',
+                y: 30
+            },
+            pointPadding: 0.1,
+            groupPadding: 0
+        }
+    },
+    colors: ['#B3BEDF','#7991CE','#3F6AB7','#335899'],
+    series: [{
+        name: 'Total',
+        data: [35302,36968,62610,40623]
+    }]
+});
+*/
+</script>
+
+</body>
+</html>
+
